@@ -17,13 +17,59 @@ Copyright 2025, Teradata. All Rights Reserved.
 * [Documentation](#documentation)
 * [Release Notes](#release-notes)
 * [Installation and Requirements](#installation-and-requirements)
-* [Using the Teradata Python Package for Generative AI](#using-the-teradata-python-package-for-generative-ai)
+* [Using the Teradata Package for Generative AI](#using-the-teradata-python-package-for-generative-ai)
 * [License](#license)
 
 ## Documentation
 General product information, including installation instructions, is available in the [Teradata Documentation website](https://docs.teradata.com/search/documents?query=Python+package+for+Generative-AI&sort=last_update&virtual-field=title_only&content-lang=en-US).
 
 ## Release Notes
+### Version 20.00.00.02
+* ##### New Features/Functionality
+  * ##### Vector Store
+      * Exposes a new attribute `store_type` in VectorStore class allowing user 
+        to check the type of Vector Store. Supported vector store types are `metadata-based`, 
+        `content-based`, `file-based` and `embedding-based`.
+      * Exposes following new functions in VectorStore class.
+        * `get_indexes_embeddings` - Returns DataFrame containing embedding and indexing 
+                                     information of the Vector Store.
+        * `get_model_info` - Returns model specific DataFrame or dict containing DataFrames
+                             depending on the `search_algorithm`. 
+            * If `search_algorithm` is `kmeans`, dict is returned containing the two tables mentioned below:
+              * `kmeans_model` - Contains the `kmeans_model` information.
+              * `centroids_model` - Contains the `centroids` information.
+            * If `search_algorithm` is `hnsw`, DataFrame is returned containing:
+              * `hnsw_model` - Contains the `hnsw_model` information.
+          * `similarity_search_by_vector` - Performs similarity_search for 'embeddings-based' Vector Store
+                                            when question is embedded and passed in `question` argument.
+                                            or embedded question is present in a table and that is passed in `data` 
+                                            and `column` arguments.
+      * Exposes the following new parameters for create and update:
+        * `extract_infographics`
+        * `extract_method`
+        * `hf_access_token`
+
+  * ##### TextAnalyticsAI Functions
+    * Support added in TeradataAI for a new API type 'onnx' to handle external ONNX models within Teradata Vantage.
+    * Support added in TextAnalyticsAI to generate Text Embeddings with ONNX models.
+    * Support added in TeradataAI and TextAnalyticsAI to work with NVidia NIM, 
+      to perform a wide array of text analytic tasks including:
+        * KeyPhrase Extraction
+        * PII (Personally Identifiable Information) Entity Recognition
+        * Masking PII Information
+        * Language Detection
+        * Language Translation
+        * Text Summarization
+        * Entity Recognition
+        * Sentiment Analysis 
+        * Text Classification 
+        * Text Embeddings 
+        * Asking LLM
+
+* ##### Bug Fixes
+  * Response code is not shown for errors raised for async operations
+    like `create`, `update`, `destroy` from `status`.
+
 ### Version 20.00.00.01
 * ##### New Features/Functionality
   * ##### Vector Store
@@ -101,7 +147,7 @@ Note: 32-bit Python is not supported.
 
 ### Installation
 
-Use pip to install the Teradata Python Package for Generative AI
+Use pip to install the Teradata Package for Generative AI
 
 Platform       | Command
 -------------- | ---
@@ -115,9 +161,9 @@ Platform       | Command
 macOS/Linux    | `pip install --no-cache-dir -U teradatagenai`
 Windows        | `python -m pip install --no-cache-dir -U teradatagenai`
 
-## Using the Teradata Python Package for Generative AI:
+## Using the Teradata Package for Generative AI:
 
-Your Python script must import the `teradatagenai` package in order to use the Teradata Python Package for Generative AI. Let us walkthrough some examples to gain a better understanding. We need a common setup to load the data and import the required packages.
+Your Python script must import the `teradatagenai` package in order to use the Teradata Package for Generative AI. Let us walkthrough some examples to gain a better understanding. We need a common setup to load the data and import the required packages.
 
 ### Common Setup
 
@@ -214,6 +260,21 @@ llm = TeradataAI(api_type="gcp", model_name="gemini-1.5-pro-001")
 obj = TextAnalyticsAI(llm=llm)
 obj.analyze_sentiment(column='reviews', data=df_reviews, accumulate="reviews")
 ```
+#### Using NVIDIA NIM model `meta/llama-3.1-8b-instruct`.
+
+```python
+# Define Azure OpenAI environment variables.
+os.environ["NIM_API_KEY"] = "<NVIDIA NIM API key>"
+
+# Create a TeradataAI object with the specified model.
+llm = TeradataAI(api_type="nim", api_base = "<nim base url>",model_name="meta/llama-3.1-8b-instruct")
+```
+
+```python
+# Create a TextAnalyticsAI object.
+obj = TextAnalyticsAI(llm=llm)
+obj.analyze_sentiment(column='reviews', data=df_reviews, accumulate="reviews")
+```
 
 ### Get Embeddings and Similarity Score for Employee Data and Articles
 
@@ -273,5 +334,5 @@ llm.task(
 ```
 
 ## License
-Use of the Teradata Python package for Generative-AI is governed by the *License Agreement for the Teradata Python package for Generative-AI*. 
+Use of the Teradata package for Generative-AI is governed by the *License Agreement for the Teradata package for Generative-AI*. 
 After installation, the `LICENSE` and `LICENSE-3RD-PARTY.pdf` files are located in the `teradatagenai` directory of the Python installation directory.
