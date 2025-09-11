@@ -24,6 +24,48 @@ Copyright 2025, Teradata. All Rights Reserved.
 General product information, including installation instructions, is available in the [Teradata Documentation website](https://docs.teradata.com/search/documents?query=Python+package+for+Generative-AI&sort=last_update&virtual-field=title_only&content-lang=en-US).
 
 ## Release Notes
+### Version 20.00.00.03
+* ##### New Features/Functionality
+  * ##### Vector Store
+    * Compatible with August Lake drop (Tahoe-1.2.1) .
+    * Added new methods for managing and creating vector stores:
+      * `from_documents(name, documents, embedding=None, **kwargs)`: Creates a file-based vector store directly from PDF documents, directories, or wildcards. Supports embedding models and chat completion models. If the store already exists, raises an error.
+      * `from_texts(name, texts, embedding=None, **kwargs)`: Creates a content-based vector store from raw text or a list of texts. Supports embedding models and chat completion models. If the store already exists, raises an error.
+      * `from_datasets(name, data, embedding=None, **kwargs)`: Creates a content-based vector store from tables or DataFrames, specifying data columns and optional key columns, with embedding model support. If the store already exists, raises an error.
+      * `from_embeddings(name, data, **kwargs)`: Creates an embedding-based vector store from pre-embedded tables or DataFrames, specifying the embedding columns. If the store already exists, raises an error.
+      * `add_documents(documents, **kwargs)`: Adds documents (PDFs, directories, or wildcards) to an existing file-based vector store. Automatically creates the store if it does not exist.
+      * `add_datasets(data, **kwargs)`: Adds tables or DataFrames to a content-based vector store. Creates the store if needed.
+      * `add_embeddings(data, **kwargs)`: Adds embedding data to an embedding-based vector store.
+      * `add_texts(texts, **kwargs)`: Adds raw text or list of texts to a content-based vector store.
+      * `delete_documents(documents, **kwargs)`: Removes specified documents from a file-based vector store.
+      * `delete_datasets(data, **kwargs)`: Removes specified datasets from a content-based vector store.
+      * `delete_embeddings(data, **kwargs)`: Removes embedding data from an embedding-based vector store.
+    * The `name` argument for `VectorStore` initialization is now optional. If not provided, the store can be created later using the `create` method.
+    * The `create` method now accepts the `name` argument, allowing users to specify or update the vector store name at creation time.
+  * ##### TextAnalyticsAI & TeradataAI
+    * Added support to save and retrieve external ONNX models and tokenizers in Teradata Vantage for API type 'onnx'.
+      * Users can specify separate tables and schema for models and tokenizers using the following new parameters:
+        * `model_table_name`, `model_schema_name`: Specify the table and schema for storing the ONNX model.
+        * `tokenizer_table_name`, `tokenizer_schema_name`: Specify the table and schema for storing the tokenizer.
+        * `tokenizer_id`: Optionally specify a unique identifier to save or retrieve the tokenizer (defaults to `model_id` if not provided).
+        * `additional_columns_model`, `additional_columns_types_model`: Add custom metadata columns and types for the model table.
+        * `additional_columns_tokenizer`, `additional_columns_types_tokenizer`: Add custom metadata columns and types for the tokenizer table.
+  * ##### Hugging Face
+    * **Improved  Model Installation**: Added support to install models in a new way that removes torch and transformer dependencies, improving performance.
+    * **Model Detection**: Added support to detect models installed in both standard and legacy formats.
+    * **Script Updates**: Enhanced user scripts with dual format model path support.
+    * **Replace Parameter**: Added `replace` parameter to all methods to overwrite existing files.
+    * **Cleanup Method**: New `cleanup_env()` method for removing sample files from environments.
+    * **Custom Embeddings**: Added `embeddings_dim` parameter to support custom dimensions for embedding models.
+    * **Output Table Info**: Added functionality to print output table information for better visibility of results.
+    * **Accumulate Parameter**: Added `accumulate` parameter to include input columns in the output result.
+
+* ##### Bug Fixes
+  * ##### TextAnalytics
+    * `ELE-8278`: Fixed invalid SQL generation with authorization parameter for embeddings()
+    * `ELE-8384`: Incorrect error raised when pdf file does not exist during vector store creation.
+    * Fixed an issue where the `is_debug` parameter was not being added to generated SQL  in TextAnalyticsAI functions.
+
 ### Version 20.00.00.02
 * ##### New Features/Functionality
   * ##### Vector Store
@@ -143,7 +185,8 @@ Note: 32-bit Python is not supported.
 * SLES 12 or later versions
 * VantageCloud Lake on AWS with Open Analytics Framework in order to use Teradata’s BYO LLM offering.
 ### Minimum Database Requirements
-* Teradata Vantage with database release 20.00 or later 
+* Teradata Vantage with database release 20.00.25.XX or later 
+* Vector Store (Data insights) service is enabled.
 
 ### Installation
 
@@ -335,4 +378,4 @@ llm.task(
 
 ## License
 Use of the Teradata package for Generative-AI is governed by the *License Agreement for the Teradata package for Generative-AI*. 
-After installation, the `LICENSE` and `LICENSE-3RD-PARTY.pdf` files are located in the `teradatagenai` directory of the Python installation directory.
+After installation, the `LICENSE` file is located in the `teradatagenai` directory of the Python installation directory.
