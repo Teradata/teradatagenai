@@ -24,10 +24,107 @@ Copyright 2025, Teradata. All Rights Reserved.
 General product information, including installation instructions, is available in the [Teradata Documentation website](https://docs.teradata.com/search/documents?query=Python+package+for+Generative-AI&sort=last_update&virtual-field=title_only&content-lang=en-US).
 
 ## Release Notes
+### Version 20.00.00.05
+* ##### Bug Fixes
+  * ##### TextAnalytics
+    * `ELE-9588`: Fixed backward compatibility issue with 'show_num_tokens' and 'refresh_credential_time' parameters
+      in Database version < '20.00.28.XX'.
+### Version 20.00.00.04
+* ##### New Features/Functionality
+  * New features introduced in this release require Database version 20.00.28.XX
+  * ##### Vector Store
+    * Added support for TeradataAI ONNX object as embeddings in AI Factory.
+    * Added a new method `delete_by_ids` that delete specific chunks from a file in the vector store.
+    * Exposes the following new parameters for create and update:
+        * `metadata_columns` - Specifies the list of input column names to be used for metadata.
+        * `metadata_descriptions` - Specifies the descriptions of the metadata columns.
+        * `content_safety_base_url` - Specifies the base URL for Guardrails model ensuring safe outputs from LLM.
+        * `topic_control_base_url` - Specifies the base URL for Guardrails model ensuring topic control.
+        * `jailbreak_detection_base_url` - Specifies the base URL for Guardrails model ensuring jailbreak detection.
+        * `vlm_base_url` - Specifies the base URL for Vision Language Model when extract_caption from images is enabled.
+        * `ranking_base_url` - Specifies the base URL for the service to be used for the reranker model.
+        * `content_safety_model` - Specifies the guardrails model ensuring safe outputs from LLM.
+        * `topic_control_model` - Specifies the guardrails model ensuring topic control.
+        * `vlm_model` - Specifies the Vision Language Model to be used when extract_caption from images is enabled.
+        * `guardrails` - Specifies what kind of Guardrails to apply.
+        * `ranking_model` - Specifies the model to be used for reranking the search results.
+        * `embedding_datatype` - Specifies the data type for storing embeddings.
+        * `use_simd` - Specifies whether to use SIMD for faster processing.
+        * `maximal_marginal_relevance` - Specifies whether to use Maximal Marginal Relevance (MMR) for retrieving documents.
+        * `num_NodesPerGraph` - Specifies the number of nodes per graph in the HNSW graph during construction.
+        * `lambda_multiplier` - Specifies lambda multiplier to control the trade-off between relevance and diversity when selecting documents.
+        * `chunk_overlap` - Specifies the number of overlapping characters between two consecutive chunks during file splitting.
+        * `extract_metadata_json` - Specifies whether to extract metadata in JSON format when using NVIDIA NV-Ingest.
+        * `extract_caption` - Specifies whether to extract captions for images and tables when using NVIDIA NV-Ingest.
+        * `overwrite_object` - Specifies whether to overwrite the existing object with the same name in the database.
+        * `embedding_data_columns` - Specifies the name of the column over which the pre embedded data is generated.
+        * `metadata_operation` - Specifies the operation to be performed on metadata columns during update (ADD, DELETE, MODIFY).
+        * `new_vs_name` - Specifies the new name to be used for the vector store.
+    * Added new parameters to pass model url parameters and ingest parameters to from_* and add_* methods during vector store creation:
+      * `model_urls` - Specifies the urls and model information to be used during Vector Store creation.
+      * `ingest_params` - Specifies the parameters to be used for document ingestion for NIM. Applicable only for file-based vector stores.
+
+    * Added new parameters for similarity_search:
+      * `column`: Specifies the column name which contains the question in text format.
+      * `data`: Specifies the table name/DataFrame which contains the question in text format.
+
+    * Added new parameters for ask:
+      * `batch_vector_column`: Specifies the column that contains the questions in embedded form.
+      * `question_vector`: Specifies the question in vector/embedded form.
+      * `data`: Specifies table name or corresponding teradataml DataFrame where the question is stored (only one question/row should be present).
+      * `column`: Specifies the column name which contains the question in text format.
+      * `vector_column`: Specifies the column name which contains the question in embedded format.
+
+    * Added new common parameters for similarity_search, similarity_search_by_vector and ask:
+      * `top_k`: Specifies the number of top similarity matches to be generated.
+      * `search_threshold`: Specifies the threshold value to consider matching tables/views while searching.
+      * `search_numcluster`: Specifies the number of clusters or fraction of train_numcluster to be considered while searching. 
+      * `ef_search`: Specifies the number of neighbors to consider during search in HNSW graph.  
+      * `filter`: Specifies the filter to be used for filtering the results.
+      * `filter_style`: Specifies whether to apply filtering before or after the similarity_search.
+      * `maximal_marginal_relevance`: Specifies whether to use Maximal Marginal Relevance (MMR) for retrieving documents.
+      * `lambda_multiplier`: Specifies Lambda multiplier to control the trade-off between relevance and diversity when selecting documents.
+
+    * Added the following classes:
+      * `ModelUrlParams` class to configure model and URL-related parameters for vector store creation using from_* and add_* methods on AI-Factory.
+      * `IngestParams` class to configure ingestor-related parameters for file-based vector store creation using from_* and add_* methods on AI-Factory.
+      * Note: Users can still pass these parameters directly while creating the vector store.
+
+    * Added the following methods to set the search parameters based on the "search_algorithm":
+      * `set_kmeans_search_params()` method to configure KMEANS search parameters for the vector store.
+      * `set_hnsw_search_params()` method to configure HNSW search parameters for the vector store. 
+      * `set_vectordistance_search_params()` method to configure VECTORDISTANCE search algorithm parameters for the vector store.
+
+  * ##### TeradataAI
+    * Authentication precedence order for TeradataAI has been established: the authorization object has the highest priority, followed by explicitly passed parameters, then the configuration file, and finally environment variables.
+    * Added new parameter `model_operation` for AWS Bedrock to specify the operation type ('invoke' or 'converse').
+
+  * ##### TextAnalyticsAI
+    * Added support for `show_num_tokens` parameter to display token count information during text analytics operations.
+    * Added support for `refresh_credential_time` parameter for AWS and Azure to control credential refresh time.
+    * Enhanced `accumulate` parameter to accept list of strings for AWS, Azure, GCP, and NIM API types.
+
+  * ##### NVIDIA NV-Ingest Integration
+    * Added comprehensive integration with NVIDIA's NV-Ingest pipeline for advanced document processing and vector store creation.
+    * `create_nvingest_schema`: Creates a default schema structure compatible with NVIDIA NV-Ingest processing pipeline.
+    * `write_to_nvingest_vector_store`: Process and insert NV-Ingest records into a Teradata Vector Store. Handles complete pipeline from data processing to vector store creation with content type filtering options.
+    * `nvingest_retrieval`: Perform vector similarity search using NVIDIA embedding models against a Teradata Vector Store. Supports single or multiple query processing with automatic embedding generation.
+    * `TeradataVDB` class: Implementation of NV-Ingest abstract VDB class that helps integrate Teradata Vector Store into the NVIDIA NV-Ingest processing pipeline. It supports the following functions:
+    """
+      * `create_index`: Create schema for Teradata Vector Store compatible with NVIDIA NV-Ingest.
+      * `write_to_index`: Write NV-Ingest extracted records to the Teradata Vector Store.
+      * `retrieval`: Perform similarity search and return results from the vector store.
+      * `run`: Combine vector store creation and record writing in one operation.
+
+* ##### Bug Fixes
+  * ##### TextAnalytics
+    * `ELE-9226`: Fixed sample script installation for embeddings() and sentence_similarity().
+    * `ELE-9406`: Fixed invalid SQL generation with authorization parameter for mask_pii()
+
 ### Version 20.00.00.03
 * ##### New Features/Functionality
+  * Features introduced in this release require Database version 20.00.27.XX
   * ##### Vector Store
-    * Compatible with August Lake drop (Tahoe-1.2.1) .
     * Added new methods for managing and creating vector stores:
       * `from_documents(name, documents, embedding=None, **kwargs)`: Creates a file-based vector store directly from PDF documents, directories, or wildcards. Supports embedding models and chat completion models. If the store already exists, raises an error.
       * `from_texts(name, texts, embedding=None, **kwargs)`: Creates a content-based vector store from raw text or a list of texts. Supports embedding models and chat completion models. If the store already exists, raises an error.
@@ -68,6 +165,7 @@ General product information, including installation instructions, is available i
 
 ### Version 20.00.00.02
 * ##### New Features/Functionality
+  * Features introduced in this release require Database version 20.00.27.XX
   * ##### Vector Store
       * Exposes a new attribute `store_type` in VectorStore class allowing user 
         to check the type of Vector Store. Supported vector store types are `metadata-based`, 
@@ -114,6 +212,7 @@ General product information, including installation instructions, is available i
 
 ### Version 20.00.00.01
 * ##### New Features/Functionality
+  * Features introduced in this release require Database version 20.00.26.XX
   * ##### Vector Store
     * Teradata Enterprise Vector Store is designed to store, index, and search high-dimensional vector embeddings efficiently.
     * `teradatagenai` provides the below python APIs to easily access and manage vector store and build their own NL applications using Vantage as the foundational compute/storage engine.
@@ -156,6 +255,7 @@ General product information, including installation instructions, is available i
 
 ### Version 20.00.00.00
 * `teradatagenai 20.00.00.00` marks the first release of the package.
+* Features introduced in this release require Database version 20.00.25.XX
 * This version supports the integration of Hugging Face models into Teradata Vantage through the BYO LLM offering, enabling seamless utilization of these models for a wide array of text analytics tasks.
     * KeyPhrase Extraction
     * PII (Personally Identifiable Information) Entity Recognition
@@ -172,9 +272,14 @@ General product information, including installation instructions, is available i
 
 ## Installation and Requirements
 ### Package Requirements:
-* Python 3.9 or later
-
-Note: 32-bit Python is not supported.
+* Python 3.9 or later (for all standard features)
+* **NVIDIA NV-Ingest integration**:
+  * Python 3.11 or later
+  * To install the package with NV-Ingest support, use the following command:
+    ```bash
+    pip install teradatagenai[nv-ingest-client]
+    ```
+*Note: 32-bit Python is not supported.*
 
 ### Minimum System Requirements:
 * Windows 7 (64Bit) or later
@@ -185,7 +290,7 @@ Note: 32-bit Python is not supported.
 * SLES 12 or later versions
 * VantageCloud Lake on AWS with Open Analytics Framework in order to use Teradata’s BYO LLM offering.
 ### Minimum Database Requirements
-* Teradata Vantage with database release 20.00.25.XX or later 
+* Teradata Vantage with database release 20.00.26.XX or later 
 * Vector Store (Data insights) service is enabled.
 
 ### Installation
@@ -378,4 +483,4 @@ llm.task(
 
 ## License
 Use of the Teradata package for Generative-AI is governed by the *License Agreement for the Teradata package for Generative-AI*. 
-After installation, the `LICENSE` file is located in the `teradatagenai` directory of the Python installation directory.
+After installation, the `LICENSE` and `LICENSE-3RD-PARTY` files are located in the `teradatagenai` directory of the Python installation directory.
