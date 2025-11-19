@@ -24,6 +24,11 @@ Copyright 2025, Teradata. All Rights Reserved.
 General product information, including installation instructions, is available in the [Teradata Documentation website](https://docs.teradata.com/search/documents?query=Python+package+for+Generative-AI&sort=last_update&virtual-field=title_only&content-lang=en-US).
 
 ## Release Notes
+### Version 20.00.00.05
+* ##### Bug Fixes
+  * ##### TextAnalytics
+    * `ELE-9588`: Fixed backward compatibility issue with 'show_num_tokens' and 'refresh_credential_time' parameters
+      in Database version < '20.00.28.XX'.
 ### Version 20.00.00.04
 * ##### New Features/Functionality
   * New features introduced in this release require Database version 20.00.28.XX
@@ -479,4 +484,3 @@ llm.task(
 ## License
 Use of the Teradata package for Generative-AI is governed by the *License Agreement for the Teradata package for Generative-AI*. 
 After installation, the `LICENSE` and `LICENSE-3RD-PARTY` files are located in the `teradatagenai` directory of the Python installation directory.
-
