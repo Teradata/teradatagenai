@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudSync Pro - Technical Documentation</title>
+</head>
+<body>
+    <h1>CloudSync Pro API Documentation</h1>
+    
+    <section id="overview">
+        <h2>Overview</h2>
+        <p>CloudSync Pro provides a comprehensive RESTful API for integrating cloud synchronization capabilities into your applications. The API supports multiple cloud providers and offers real-time synchronization, conflict resolution, and advanced security features.</p>
+    </section>
+
+    <section id="authentication">
+        <h2>Authentication</h2>
+        <p>All API requests require authentication using API keys. Include your API key in the request header:</p>
+        <code>Authorization: Bearer YOUR_API_KEY</code>
+        
+        <h3>Obtaining API Keys</h3>
+        <ol>
+            <li>Log in to your CloudSync Pro dashboard</li>
+            <li>Navigate to Settings > API Keys</li>
+            <li>Click "Generate New Key"</li>
+            <li>Copy and securely store your API key</li>
+        </ol>
+    </section>
+
+    <section id="endpoints">
+        <h2>API Endpoints</h2>
+        
+        <h3>1. Sync Files</h3>
+        <p><strong>POST</strong> /api/v1/sync</p>
+        <p>Initiates a synchronization operation between source and destination.</p>
+        
+        <h4>Parameters:</h4>
+        <ul>
+            <li><code>source_path</code> (string, required): Path to source directory or file</li>
+            <li><code>destination_path</code> (string, required): Path to destination</li>
+            <li><code>mode</code> (string, optional): Sync mode - "incremental" or "full". Default: "incremental"</li>
+            <li><code>conflict_resolution</code> (string, optional): "newest", "oldest", or "manual". Default: "newest"</li>
+        </ul>
+
+        <h3>2. Get Sync Status</h3>
+        <p><strong>GET</strong> /api/v1/sync/{sync_id}/status</p>
+        <p>Retrieves the current status of a synchronization job.</p>
+
+        <h3>3. List Sync Jobs</h3>
+        <p><strong>GET</strong> /api/v1/sync/jobs</p>
+        <p>Returns a list of all synchronization jobs for the authenticated user.</p>
+    </section>
+
+    <section id="rate-limits">
+        <h2>Rate Limits</h2>
+        <table border="1">
+            <tr>
+                <th>Tier</th>
+                <th>Requests per Minute</th>
+                <th>Requests per Day</th>
+            </tr>
+            <tr>
+                <td>Free</td>
+                <td>60</td>
+                <td>5,000</td>
+            </tr>
+            <tr>
+                <td>Professional</td>
+                <td>300</td>
+                <td>50,000</td>
+            </tr>
+            <tr>
+                <td>Enterprise</td>
+                <td>1,000</td>
+                <td>Unlimited</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="error-codes">
+        <h2>Error Codes</h2>
+        <ul>
+            <li><strong>400</strong> - Bad Request: Invalid parameters</li>
+            <li><strong>401</strong> - Unauthorized: Invalid or missing API key</li>
+            <li><strong>403</strong> - Forbidden: Insufficient permissions</li>
+            <li><strong>404</strong> - Not Found: Resource does not exist</li>
+            <li><strong>429</strong> - Too Many Requests: Rate limit exceeded</li>
+            <li><strong>500</strong> - Internal Server Error: Contact support</li>
+        </ul>
+    </section>
+
+    <footer>
+        <p>© 2024 TechVision Solutions. All rights reserved.</p>
+        <p>For support, contact: api-support@techvision-solutions.com</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,16 @@
+Month,Product,Revenue,Units_Sold,Region,Customer_Segment
+January,CloudSync Pro,249950,50,North America,Enterprise
+January,DataGuard Analytics,375000,50,Europe,Financial Services
+January,SmartFlow Automation,149950,50,Asia Pacific,Mid-Market
+February,CloudSync Pro,299940,60,North America,Enterprise
+February,DataGuard Analytics,450000,60,Europe,Healthcare
+February,SmartFlow Automation,179940,60,Asia Pacific,Technology
+March,CloudSync Pro,349930,70,North America,Manufacturing
+March,DataGuard Analytics,525000,70,Europe,Financial Services
+March,SmartFlow Automation,209930,70,Asia Pacific,Retail
+April,CloudSync Pro,399920,80,North America,Enterprise
+April,DataGuard Analytics,600000,80,Europe,Government
+April,SmartFlow Automation,239920,80,Asia Pacific,Mid-Market
+May,CloudSync Pro,449910,90,North America,Technology
+May,DataGuard Analytics,675000,90,Europe,Financial Services
+May,SmartFlow Automation,269910,90,Asia Pacific,Healthcare
