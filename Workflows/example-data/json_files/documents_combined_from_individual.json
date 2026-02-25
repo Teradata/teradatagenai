@@ -1,0 +1,34 @@
+[
+  {
+    "id": "doc001",
+    "doc_title": "Introduction to Vector Databases",
+    "text": "Vector databases are specialized systems designed to store and query high-dimensional vector embeddings efficiently. They enable similarity search for AI and machine learning applications, supporting semantic search, recommendation systems, and RAG architectures. Modern vector databases provide fast approximate nearest neighbor search capabilities.",
+    "category": "database",
+    "author": "Jane Smith",
+    "publish_date": "2024-01-15"
+  },
+  {
+    "id": "doc002",
+    "doc_title": "Understanding Semantic Search",
+    "text": "Semantic search leverages natural language processing and machine learning to understand query intent and contextual meaning. Unlike traditional keyword matching, semantic search considers the relationships between words and concepts to provide more relevant results. It uses embeddings to capture semantic similarity between queries and documents.",
+    "category": "nlp",
+    "author": "John Doe",
+    "publish_date": "2024-02-20"
+  },
+  {
+    "id": "doc003",
+    "doc_title": "Cloud Storage Best Practices",
+    "text": "Modern cloud storage solutions like Amazon S3, Azure Blob Storage, and Google Cloud Storage offer scalable, secure, and cost-effective data storage. Best practices include implementing proper access controls, encryption at rest and in transit, lifecycle policies for cost optimization, and versioning for data protection.",
+    "category": "cloud",
+    "author": "Alice Johnson",
+    "publish_date": "2024-03-10"
+  },
+  {
+    "id": "doc004",
+    "doc_title": "Retrieval Augmented Generation (RAG)",
+    "text": "RAG combines large language models with external knowledge retrieval to generate more accurate and contextually relevant responses. The system retrieves relevant documents from a vector database and uses them to augment the LLM prompt, reducing hallucinations and improving factual accuracy. This approach is essential for enterprise AI applications.",
+    "category": "ai",
+    "author": "Bob Wilson",
+    "publish_date": "2024-04-05"
+  }
+]

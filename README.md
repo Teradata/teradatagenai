@@ -22,8 +22,75 @@ Copyright 2025, Teradata. All Rights Reserved.
 
 ## Documentation
 General product information, including installation instructions, is available in the [Teradata Documentation website](https://docs.teradata.com/search/documents?query=Python+package+for+Generative-AI&sort=last_update&virtual-field=title_only&content-lang=en-US).
-
 ## Release Notes
+### Version 20.00.00.06
+* ##### New Features/Functionality
+  * ##### Collection (Teradata Enterprise Vector Store V2)
+    * Added comprehensive support for Teradata Enterprise Vector Store V2 with new Collection class and methods:
+      * `Collection`: New class providing modern interface for vector store operations with support for content-based, embedding-based, and file-based collections.
+      * `CollectionManager`: Management interface with methods for health checks, listing collections, session management, and user disconnection.
+      * CollectionManager methods:
+        * `disconnect()` - Terminate user sessions and clean up connections.
+        * `health()` - Check system health and service availability.
+        * `list()` - List all available collections with metadata.
+        * `list_sessions()` - List active user sessions and connection details.
+      * Collection creation methods:
+        * `create()` - Creates a new empty collection with specified configuration and schema.
+        * `from_datasets()` (class method) - Creates content-based collections from tables or DataFrames.
+        * `from_texts()` (class method) - Creates content-based collections from raw text or text lists. *Requires create_context.*
+        * `from_embeddings()` (class method) - Creates embedding-based collections from pre-embedded data.
+        * `from_documents()` (class method) - Creates file-based collections from PDF documents and directories.
+      * Collection data and lifecycle methods:
+        * `add_datasets()`, `add_texts()` (*requires create_context*), `add_embeddings()`, `add_documents()` - Add data to existing collections.
+        * `delete_datasets()`, `delete_embeddings()`, `delete_documents()` - Remove data from collections.
+        * `create()`, `update()`, `destroy()` - Collection lifecycle management.
+        * `status()`, `get_details()` - Collection information and monitoring.
+      * Advanced search and retrieval:
+        * `similarity_search()` - Vector similarity search with flexible filtering and ranking options.
+        * `similarity_search_by_vector()` - Direct vector-based similarity search.
+        * `ask()` - RAG-based question answering with chat model integration.
+        * `prepare_response()` - Response preparation and formatting for chat applications.
+      * Collection utilities:
+        * `get_indexes_embeddings()` - Retrieve embedding and indexing information. *Requires create_context.*
+        * `get_model_info()` - Get model configuration details. *Requires create_context.*
+        * `list_user_permissions()` - View user access permissions.
+    * Added `Ingestor` class for declarative pipeline orchestration:
+      * Fluent API for building ingestion pipelines with method chaining.
+      * Pipeline stages: `Ingestor()`→ `extract()` → `files()`/`load()` → `embed()` → `create()` → `run()`.
+      * Support for both file-based and table-based collection creation.
+      * `Ingestor()` - Creates an empty collection with required configuration.
+      * `extract()` - Configure extraction options for document processing (text, images, tables, metadata).
+      * `files()` - Configure file-based ingestion from local storage, S3, Azure Blob, or Google Cloud.
+      * `load()` - Configure table-based ingestion from existing datasets.
+      * `embed()` - Configure embedding model and generation options.
+      * `upsert()` - Configure indexing algorithms and finalization parameters for creating/updating collection.
+      * `run()` - Execute the complete configured pipeline with progress monitoring.
+    * Added comprehensive data classes for collection configuration:
+      * Index configuration: `ContentBasedIndex`, `EmbeddingBasedIndex` for defining collection schemas.
+      * Column specification: `ColumnInfo` for detailed column metadata, types, and source mapping.
+      * Search configuration: `SearchParams` for similarity search parameters and filtering.
+      * Indexing algorithms: `HNSW`, `FLAT`, `IVF_FLAT` for vector indexing configuration.
+      * File source configuration: `LocalConfig`, `S3Config`, `AzureBlobConfig`, `GCPConfig` for multi-cloud file access.
+      * Document processing: `BasicIngestor`, `NVIngestor`, `UnstructuredIngestor` for different extraction capabilities.
+      * Schema definition: `ExtractionSchema` for defining table structures and column mappings for file-based collections.
+      * TeradataAI
+        * Enhanced model access capabilities supporting multiple deployment scenarios:
+          * **Teradata Provided Models** - Access to pre-deployed models in Teradata infrastructure (existing implementation).
+          * **Customer Credential Models** - Direct access to models using customer's cloud credentials:
+            * AWS Bedrock - Access models deployed in customer's AWS account using AWS credentials.
+            * Azure OpenAI - Access models deployed in customer's Azure subscription using Azure credentials.
+            * NVIDIA NIM - Access NVIDIA Inference Microservices using customer NIM credentials.
+            * Google Cloud (Vertex AI) - Access models deployed in customer's GCP project using GCP credentials.
+          * **LiteLLM Proxy Integration** - Access models through LiteLLM proxy server for unified model management.
+          * **Custom Provider Support with LiteLLM** - Access models from custom providers using LiteLLM framework.
+        * **Guardrail Model Support** - Specify and configure guardrail models for content safety, topic control, and jailbreak detection to ensure safe and controlled AI outputs.
+  * VectorStore/Collection can be used without requiring a database connection, authentication via `set_auth_token` is sufficient.
+  * The authentication token object returned by `set_auth_token` can be supplied to the `VectorStore` `Collection`, `VSManager`, `CollectionManager` classes, enabling them to use the token for all subsequent operations.
+
+  * ##### TextAnalyticsAI
+    * Added support for `output_charset` parameter to set the charset of the result embeddings to either 'LATIN' or 'UNICDOE'.
+
+
 ### Version 20.00.00.05
 * ##### Bug Fixes
   * ##### TextAnalytics
@@ -34,7 +101,7 @@ General product information, including installation instructions, is available i
   * New features introduced in this release require Database version 20.00.28.XX
   * ##### Vector Store
     * Added support for TeradataAI ONNX object as embeddings in AI Factory.
-    * Added a new method `delete_by_ids` that delete specific chunks from a file in the vector store.
+    * Added a new method `delete_by_ids` that delete specific chunks from a file in the vector store. *Requires create_context.*
     * Exposes the following new parameters for create and update:
         * `metadata_columns` - Specifies the list of input column names to be used for metadata.
         * `metadata_descriptions` - Specifies the descriptions of the metadata columns.
